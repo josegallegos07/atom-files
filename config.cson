@@ -1,0 +1,20 @@
+"*":
+  core:
+    disabledPackages: [
+      "whitespace"
+    ]
+    themes: [
+      "seti-ui"
+      "seti-syntax"
+    ]
+  editor:
+    fontSize: 12
+    invisibles: {}
+  "exception-reporting":
+    userId: "d7ffbc64-8664-4acc-10a1-3fc275ef183c"
+  "seti-icons":
+    iconsPlus: true
+  tabs:
+    usePreviewTabs: true
+  welcome:
+    showOnStartup: false
