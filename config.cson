@@ -1,4 +1,7 @@
 "*":
+  "atom-beautify":
+    _analyticsUserId: "32a8f71e-6387-4aca-86fe-61fbbbd4d739"
+    js_keep_array_indentation: true
   core:
     disabledPackages: [
       "whitespace"
