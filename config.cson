@@ -12,6 +12,7 @@
   editor:
     fontSize: 12
     invisibles: {}
+    showInvisibles: true
   "exception-reporting":
     userId: "d7ffbc64-8664-4acc-10a1-3fc275ef183c"
   "seti-icons":
