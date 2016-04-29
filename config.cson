@@ -15,6 +15,14 @@
     showInvisibles: true
   "exception-reporting":
     userId: "d7ffbc64-8664-4acc-10a1-3fc275ef183c"
+  "formatter-clangformat":
+    a: {}
+    c: {}
+    cpp: {}
+    java: {}
+    js: {}
+    objc: {}
+    protobuf: {}
   "seti-icons":
     iconsPlus: true
   tabs:
