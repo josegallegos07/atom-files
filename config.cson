@@ -5,6 +5,7 @@
     disabledPackages: [
       "whitespace"
     ]
+    telemetryConsent: "no"
     themes: [
       "seti-ui"
       "seti-syntax"
