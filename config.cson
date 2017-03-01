@@ -28,5 +28,6 @@
     iconsPlus: true
   tabs:
     usePreviewTabs: true
+  "tree-view": {}
   welcome:
     showOnStartup: false
