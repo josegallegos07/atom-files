@@ -1,0 +1,59 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+        "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+        "type": "local"
+      },
+      "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-117314-15982-di2q1c"
+    ]
+  ],
+  "_from": "../d-117314-15982-ws12ce/package.tgz",
+  "_id": "language-erlang@3.2.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/language-erlang",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+    "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-117314-15982-ws12ce/package.tgz",
+  "_shasum": "458b3457a32256d38be913bf98f3041671b0e669",
+  "_shrinkwrap": null,
+  "_spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117314-15982-ws12ce/package.tgz",
+  "_where": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-117314-15982-di2q1c",
+  "bugs": {
+    "url": "https://github.com/jonathanmarvens/atom-language-erlang/issues"
+  },
+  "dependencies": {},
+  "description": "Erlang language support for Atom.",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">=0.185.0 <2.0.0"
+  },
+  "homepage": "https://github.com/jonathanmarvens/atom-language-erlang#readme",
+  "license": "MIT",
+  "name": "language-erlang",
+  "optionalDependencies": {},
+  "readme": "# language-erlang package\n\nErlang language support for Atom.\n\n-----\n\nAdds syntax highlighting and snippets to Erlang files in Atom.\n\nCopyright (c) 2014 [Jonathan Barronville](mailto:jonathan@belairlabs.com \"jonathan@belairlabs.com\")\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanmarvens/atom-language-erlang.git"
+  },
+  "version": "3.2.0"
+}
