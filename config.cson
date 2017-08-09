@@ -26,6 +26,10 @@
     protobuf: {}
   "seti-icons":
     iconsPlus: true
+  "seti-ui":
+    compactView: true
+    disableAnimations: true
+    themeColor: "Steel"
   tabs:
     usePreviewTabs: true
   "tree-view": {}
