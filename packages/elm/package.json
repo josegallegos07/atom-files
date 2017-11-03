@@ -1,0 +1,82 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+        "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+        "type": "local"
+      },
+      "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-117103-30340-wyhgyw.mhd1gu8fr"
+    ]
+  ],
+  "_from": "../d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+  "_id": "elm@0.1.0",
+  "_inCache": true,
+  "_location": "/elm",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+    "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+  "_shasum": "10640b58b24853043cfd1fe2275a81fd48880795",
+  "_shrinkwrap": null,
+  "_spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-117103-30340-hunnvc.ofoan8w7b9/package.tgz",
+  "_where": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-117103-30340-wyhgyw.mhd1gu8fr",
+  "bugs": {
+    "url": "https://github.com/triforkse/atom-elm/issues"
+  },
+  "dependencies": {},
+  "description": "Run elm-format in Atom",
+  "devDependencies": {
+    "babel-eslint": "^6.0.2",
+    "babel-preset-steelbrain": "^2.0.1",
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^7.0.0",
+    "pre-commit": "^1.1.2",
+    "ucompiler": "^3.1.8",
+    "ucompiler-plugin-babel": "^3.1.1"
+  },
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "homepage": "https://github.com/triforkse/atom-elm#readme",
+  "keywords": [
+    "elm",
+    "format",
+    "elm-format",
+    "elm-types"
+  ],
+  "license": "MIT",
+  "main": "./lib/elm",
+  "name": "elm",
+  "optionalDependencies": {},
+  "pre-commit": [
+    "lint",
+    "compile"
+  ],
+  "readme": "# elm-format\n\nRuns `elm-format` on save if you enable it\n\nGet `elm-format` at https://github.com/avh4/elm-format\n\n*Format on save* is disabled as default, so just activate it.\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/triforkse/atom-elm.git"
+  },
+  "scripts": {
+    "compile": "ucompiler go",
+    "lint": "eslint .",
+    "watch": "ucompiler watch"
+  },
+  "version": "0.1.0"
+}
