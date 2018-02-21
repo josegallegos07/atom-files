@@ -24,6 +24,8 @@
     js: {}
     objc: {}
     protobuf: {}
+  "markdown-preview":
+    useGitHubStyle: true
   "seti-icons":
     iconsPlus: true
   tabs:
