@@ -1,58 +1,72 @@
-// module-level variables
+/** @babel */
 let fs;
-let pdf;
-let path;
-let url;
+let fallback;
 let less;
-let mdpreview;
+let mdpdf;
+let os;
+let path;
+let tmp;
+let util;
 
 function loadDeps() {
-  fs = require("fs");
-  pdf = require('html-pdf');
-  path = require('path');
-  url = require('url');
+  fs = require('fs');
+  fallback = require('./fallback');
   less = require('less');
+  mdpdf = require('mdpdf');
+  os = require('os');
+  path = require('path');
+  tmp = require('tmp');
+  util = require('./util');
 }
 
 module.exports = {
-
   config: {
-    "format": {
-      "title": "Page Format",
-      "type": "string",
-      "default": "A4",
-      "enum": ["A3", "A4", "A5", "Legal", "Letter", "Tabloid"]
+    'ghStyle': {
+      'title': 'Use Github markdown CSS',
+      'type': 'boolean',
+      'default': true,
+      'order': 1
     },
-    "orientation": {
-      "title": "Page Orientation",
-      "type": "string",
-      "default": "portrait",
-      "enum": ["portrait", "landscape"]
+    'defaultStyle': {
+      'title': 'Use additional default styles',
+      'description': 'Provides basic things like border and font size',
+      'type': 'boolean',
+      'default': true,
+      'order': 2
     },
-    "timeout": {
-      "title": "Timeout",
-      "description": "Time (ms) before PhantomJS gives up on rendering. You can set a larger value for very big files.",
-      "type": "integer",
-      "default": 10000
+    'emoji': {
+      'title': 'Enable Emojis',
+      'description': 'Convert :tagname: style tags to Emojis',
+      'type': 'boolean',
+      'default': true,
+      'order': 3
     },
-    "border": {
-      "title": "Border Size",
-      "type": "string",
-      "default": "10mm"
+    'format': {
+      'title': 'Page Format',
+      'type': 'string',
+      'default': 'A4',
+      'enum': ['A3', 'A4', 'A5', 'Legal', 'Letter', 'Tabloid'],
+      'order': 4
     },
-    "type": {
-      "title": "Exported Filetype",
-      "type": "string",
-      "default": "pdf",
-      "enum": ["pdf", "png", "jpeg"]
+    'border': {
+      'title': 'Border Size',
+      'type': 'string',
+      'default': '20mm',
+      'order': 5
     },
-    "quality": {
-      "title": "Image Quality",
-      "description": "Only used for .png and .jpeg formats.",
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 100,
-      "default": 100
+    'outputDir': {
+      'title': 'Override output directory',
+      'description': 'Defaults to input file directory',
+      'type': 'string',
+      'default': '',
+      'order': 6
+    },
+    'forceFallback': {
+      'title': 'Force Fallback Mode',
+      'description': 'Legacy code; not all config options supported',
+      'type': 'boolean',
+      'default': false,
+      'order': 7
     }
   },
 
@@ -61,182 +75,88 @@ module.exports = {
     atom.commands.add('atom-workspace', 'markdown-pdf:convert', this.convert);
   },
 
-  convert: function() {
+  convert: async function() {
     try{
-      mdpreview = atom.packages.getActivePackage('markdown-preview');
-
-      if(!mdpreview) {
-        // Use markdown-preview-plus if markdown-preview has been disabled
-        mdpreview = atom.packages.getActivePackage('markdown-preview-plus');
+      const conf = atom.config.get('markdown-pdf');
+      if(conf.forceFallback) {
+        throw new Error('Forcing fallback mode');
       }
-
-      outPath = getOutputPath();
-      html = converter.htmlFromPreview()
-        .convertImgSrcToURI()
-        .styleHtml()
-        .uglyFix();
-      makePdf(html, outPath);
-    }
-    catch(err){
-      atom.notifications.addError('markdown-pdf: ' + err, {dismissable: true});
-      console.log(err.stack);
-      return;
-    }
-  }
-}
-
-
-var converter = {
-
-  dataString: '',
-
-  htmlFromPreview: function () {
-    // we use the clipboard to grab HTML from a preview package (maybe there's a better way?)
-    var cb = atom.clipboard;
-    var old = cb.read();  //save old clipboard contents
-
-    if(mdpreview.name === 'markdown-preview'){
-      mdpreview.mainModule.copyHtml();  //get html on clipboard
-    }
-    else if (mdpreview.name === 'markdown-preview-plus') {
-      callback = atom.clipboard.write.bind(atom.clipboard);
-      mdpreview.mainModule.copyHtml(callback, 200); // copy parsed markdown with maths scaled 200%
-    }
-
-    this.dataString = cb.read();
-    cb.write(old);  //put old clipboard contents back
-
-    return this;
-  },
-
-  convertImgSrcToURI: function () {
-    // puts all "img src" in URI form (i.e. "file://")
-    var div = document.createElement('div');
-    div.innerHTML = this.dataString;
-    var imgs = div.getElementsByTagName('img');
-    for(var s = 0; s < imgs.length; s++){
-      imgs[s].src = processSrc(imgs[s].attributes.src.value);
-    }
-    this.dataString = div.innerHTML;
-    return this;
-  },
-
-  styleHtml: function () {
-    var wrappedHtml = '<body class="markdown-preview native-key-binding markdown-body">' + this.dataString + '</body>';
-
-    var styles = {};
-    styles.gfmstyles = fs.readFileSync(__dirname + '/github-markdown.css', 'utf-8');
-    styles.syntaxStyles = atom.themes.getActiveThemes()[0].stylesheets[0][1];
-
-    if(fs.existsSync(atom.styles.getUserStyleSheetPath(), 'utf8')){
-      //add user stylesheet to html if it exists
-      var upath = atom.styles.getUserStyleSheetPath();
-      var ustyle = fs.readFileSync(upath, 'utf8');
-
-      // compiling less to css if file extension is .less
-      if (upath.substr(upath.length - 5).toLowerCase() == '.less') {
-        less.render(ustyle, function(e, output) {
-          styles.userStyles = output;
-        });
+      const activeEditor = atom.workspace.getActiveTextEditor();
+      let inPath = activeEditor.getPath();
+      if(inPath === undefined) {  // make temp input file for unsaved md
+        inPath = path.join(os.tmpdir(), `${new Date().getTime()}.md`);
+        const currentBuffer = atom.workspace.getActiveTextEditor().getBuffer();
+        const bufferContent = currentBuffer.getText();
+        fs.writeFileSync(inPath, bufferContent);
       }
-      else {
-        styles.userStyles = ustyle;
+      const outPath = util.getOutputPath(inPath);
+      const debugPath = path.join(os.tmpdir(), 'debug.html');
+      const options = {
+        debug: debugPath,
+        source: inPath,
+        destination: outPath,
+        ghStyle: conf.ghStyle,
+        defaultStyle: conf.defaultStyle,
+        noEmoji: !conf.emoji,
+        pdf: {
+          format: conf.format,
+          quality: 100,
+          header: {
+            height: null
+          },
+          footer: {
+            height: null
+          },
+          border: {
+            top: conf.border,
+            left: conf.border,
+            bottom: conf.border,
+            right: conf.border
+          },
+        }
+      };
+      let sheetPath = atom.styles.getUserStyleSheetPath();
+      const pathObj = path.parse(sheetPath);
+      if(pathObj.ext === '.less') {
+        const lessData = fs.readFileSync(sheetPath, 'utf8');
+        sheetPath = tmp.tmpNameSync({postfix: '.css'});
+        const rendered = await less.render(lessData);
+        fs.writeFileSync(sheetPath, rendered.css, 'utf8');
+    }
+      options.styles = sheetPath;
+      atom.notifications.addInfo('Converting to PDF...', {icon: 'markdown'});
+      await mdpdf.convert(options);
+      atom.notifications.addSuccess(
+        'Converted successfully.',
+        { detail: 'Output in ' + outPath, icon: 'file-pdf' }
+      );
+    } catch(err) {
+      try {
+        console.error(err.stack);
+        atom.notifications.addWarning('Attempting conversion with fallback.');
+        await fallback.convert();
+      } catch(err) {
+        const remote = require('remote');
+        if(err.message === 'MPP-ERROR') {
+          atom.notifications.addError(
+            'Markdown-preview-plus is not supported.',
+            {detail: 'Please enable markdown-preview to use fallback mode.'}
+          );
+        } else {
+          atom.notifications.addError(
+            'Markdown-pdf: Error. Check console for more information.',
+            {
+              buttons: [{
+                className: 'md-pdf-err',
+                onDidClick: () => remote.getCurrentWindow().openDevTools(),
+                text: 'Open console',
+              }]
+            }
+          );
+        }
+        console.error(err.stack);
+        return;
       }
     }
-
-    var styleString = '';
-    for(var s in styles){
-      styleString += '<style>' + styles[s] + '</style>';
-    }
-    this.dataString = styleString + wrappedHtml;
-    return this;
-  },
-
-  uglyFix: function () {
-    html = this.dataString;
-    // Ugly Fix 1:
-    base64hr = 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC';
-    hrURI = '"atom://' + mdpreview.name + '/assets/hr.png"'
-    html = html.split(hrURI).join('"data:image/png;base64,' + base64hr + '"');
-    // Ugly Fix 2:
-    html = html.split(',\n:host {').join(' {');
-    html = html.split(',\n:host').join(',');
-    html = html.split(':host').join('');
-    this.datastring = html;
-    return this.dataString;
   }
-}
-
-
-function makePdf(inputHtml, outputPath){
-  atom.notifications.addInfo('Converting markdown to PDF...', {icon: 'markdown'})
-  var conf = atom.config.get('markdown-pdf');
-  pdf.create(inputHtml, conf).toFile(outputPath, function(err, res) {
-    if (err) {
-      throw 'Error converting to image format. Check console for more information.';
-    }else{
-      atom.notifications.addSuccess('Converted successfully.', {detail: 'Output in ' + outputPath, icon: 'file-pdf'});
-    }
-  });
-}
-
-function processSrc(src){
-  //make a local img src path into a "file:///absolute/path/" if it isn't already
-  var protocol = url.parse(src).protocol;
-  if(protocol == 'http:' || protocol == 'https:' || protocol == 'file:'){
-    //if the src already starts with "file://", "https://", etc., it's already in the right form (URI)
-    return src;
-  }
-  else if(path.resolve(src) !== src){
-    //if path is not absolute and has no protocol, it should be relative, so make it a URI
-    //NOTE: previewer already took care of relative paths
-    src = path.resolve(path.dirname(outPath), src);
-    return 'file:///' + src;
-  }
-  else{
-    //otherwise, the src is an absolute path. In this case we can just prepend "file://" to it
-    return 'file:///' + src;
-  }
-}
-
-function getOutputPath(){
-  var markdownPath = atom.workspace.getActivePaneItem().getPath();
-  if (!isMd(markdownPath)){    //show warning
-    atom.notifications.addWarning(
-      'Warning: File not saved as markdown type.',
-      {
-        detail: 'Attempting conversion of .{} file. \nValid extensions are `.markdown, .md, .mkd, .mkdown` and  `.ron`'.replace('{}', markdownPath.split('.').pop()),
-        dismissable: true
-      }
-    );
-  }
-  else if (!markdownPath){      //show warning and continue
-    atom.notifications.addWarning('Warning: File not saved!.', {detail: 'Attempting conversion anyway.'});
-    var treeDirPath = atom.packages.getActivePackage('tree-view').mainModule.treeView.selectedPath;
-    if(!fs.lstatSync(treeDirPath).isDirectory()){
-      treeDirPath = path.dirname(treeDirPath);
-    }
-
-    var d = new Date();
-    var outName = d.getTime() + '.' + atom.config.get('markdown-pdf.type');
-    var outputPath = path.join(treeDirPath, outName);
-    return outputPath;
-  }
-  var parsePath = path.parse(markdownPath);
-  var out = path.join(parsePath.dir, parsePath.name +
-    '.' + atom.config.get('markdown-pdf.type'));
-  return out;
-}
-
-function isMd(path){
-  if(!path) return true;
-  var accepted = ["markdown", "md", "mkd", "mkdown", "ron"];
-  var current = path.split(".").pop();
-  if(accepted.indexOf(current) != -1) return true;
-  return false;
-}
-
-function getExtension(path){
-  var ex = path.split('.').pop();
-  return ex;
 }
