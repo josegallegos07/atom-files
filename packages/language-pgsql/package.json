@@ -1,0 +1,65 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+        "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+        "type": "local"
+      },
+      "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-118715-23856-mxq601.dfwhqfflxr"
+    ]
+  ],
+  "_from": "../d-118715-23856-183o43g.mlote53ik9/package.tgz",
+  "_id": "language-pgsql@0.2.3",
+  "_inCache": true,
+  "_location": "/language-pgsql",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+    "spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-118715-23856-183o43g.mlote53ik9/package.tgz",
+  "_shasum": "ecf4cc966686243ebe8f22e42a3f442d0a297dd3",
+  "_shrinkwrap": null,
+  "_spec": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/d-118715-23856-183o43g.mlote53ik9/package.tgz",
+  "_where": "/private/var/folders/qf/kzsk3ts52gj33djpvy2nvgv00000gn/T/apm-install-dir-118715-23856-mxq601.dfwhqfflxr",
+  "bugs": {
+    "url": "https://github.com/marcos-mestre/atom-language-pgsql/issues"
+  },
+  "dependencies": {},
+  "description": "PL/PgSQL language support in Atom",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "homepage": "https://github.com/marcos-mestre/atom-language-pgsql#readme",
+  "keywords": [
+    "postgresql",
+    "postgres",
+    "pgsql",
+    "plpgsql",
+    "psql"
+  ],
+  "license": "MIT",
+  "name": "language-pgsql",
+  "optionalDependencies": {},
+  "readme": "# atom-language-pgsql package\n\nPL/PgSQL (aka postgres) language support in Atom\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcos-mestre/atom-language-pgsql.git"
+  },
+  "version": "0.2.3"
+}

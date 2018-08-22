@@ -1,0 +1,390 @@
+// The ui-variables file is provided by base themes provided by Atom.
+// https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
+// https://github.com/atom/atom/blob/master/static/variables/syntax-variables.less
+// https://github.com/atom/atom/blob/master/static/variables/ui-variables.less
+// for a full listing of what's available.
+@import "ui-variables";
+//@import "syntax-variables";
+
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('atom://data-atom/resources/fontawesome-webfont.woff2') format('woff2');
+}
+
+.atom-psql.autocomplete {
+	padding-right: 0.5em;
+
+	&-tbl::before {
+		font-family: "FontAwesome";
+		content: "\f0ce";
+	}
+
+	&-col::before {
+		font-family: "FontAwesome";
+		content: "\f0db";
+	}
+}
+
+.atom-psql-html {
+	//background-color: @syntax-background-color;
+	//color:@syntax-text-color;
+	background-color: @base-background-color;
+	color: @text-color;
+	overflow: auto;
+	box-sizing: border-box;
+	padding: 0;
+	font-size: @input-font-size;
+	font-family: Menlo, Consolas, "DejaVu Sans Mono", "monospace";
+	br {
+		display: none;
+	}
+	white-space: pre;
+
+	.psql-out-html {
+		padding: 9px 4px 5px 7px;
+	}
+	.psql-out-text {
+		padding: 10px 4px 5px 7px;
+	}
+
+	table {
+		margin: 1px;
+		border: 1px solid @base-border-color;
+		border-collapse: collapse;
+		//overflow: auto;
+	}
+	table td, table th {
+		border: 1px solid @base-border-color;
+		padding: 3px 2px;
+	}
+	gable tbody {
+		//overflow: auto;
+	}
+	table tbody td {
+	}
+	table tr:nth-child(even) {
+		background: @background-color-highlight;
+		/*color: @text-color-highlight;*/
+	}
+	table tr th {
+		background: @background-color-success;
+		color: @text-color-highlight;
+		font-weight: bold;
+		border: 2px solid @base-border-color;
+	}
+
+}
+
+// put all our styling under this to minimise clashes
+.atom-psql-ui {
+	button[disabled]:hover {
+		border-color: @base-border-color;
+	}
+
+	select {
+		color: @text-color;
+		border-color: @panel-heading-background-color;
+		background-color: lighten(@overlay-background-color, 10%);
+		font-size: 1.25em;
+		height: 2em;
+		margin-bottom: 0.75em;
+	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+		padding: .3rem 0;
+	}
+
+	.row-centered {
+		align-items: center;
+	}
+
+	.row-item {
+		flex-shrink: 1;
+		flex-grow: 0;
+	}
+
+	.row-item-flex {
+		flex-shrink: 1;
+		flex-grow: 1;
+	}
+
+	.row-item-pad-right {
+		padding-right: .3rem;
+	}
+
+	.row-item-pad-left {
+		padding-left: .3rem;
+	}
+
+	// all styles for a data atom dialog
+	&.dialog {
+		display: flex;
+		flex-direction: column;
+		padding: 0.8rem;
+
+		select {
+			margin-bottom: 0;
+		}
+
+		label {
+			margin-bottom: 0;
+		}
+
+		atom-text-editor[mini] {
+			margin-bottom: 0;
+		}
+
+		.control-label {
+			flex-shrink: 0;
+			flex-grow: 0;
+			width: 7rem;
+		}
+
+		.heading {
+			padding: 0rem 0.3rem 1rem 0;
+			font-size: 14pt;
+		}
+
+		.btn-padding-left {
+			margin-left: 10px;
+		}
+
+		.label-or {
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+
+		.control-port {
+			padding-left: 2rem;
+			padding-right: 1rem;
+		}
+
+		.buttons {
+			text-align: right;
+			padding: 1rem 0 0 0;
+		}
+
+	}
+
+	#btnList {
+		float: left;
+	}
+
+	#btnConnect {
+		margin-right: 1rem;
+	}
+
+	#errors {
+		padding-top: 1rem;
+		margin: 0px;
+	}
+
+	#dblist {
+		padding-top: 1rem;
+		margin: 0px;
+	}
+
+	div.dblist {
+		text-align: center;
+		span.dbn {
+			border: 1px solid @base-border-color;
+			border-radius: 3px;
+			background-color: @background-color-selected;
+			padding: 3px 6px 3px 6px;
+			display: inline-block;
+			float: left;
+			margin-left: 0.5rem;
+			margin-bottom: 0.3rem;
+			color: @text-color;
+		}
+
+		span.dbn:hover {
+			color: lighten(@text-color, 40%);
+			background-color: lighten(@background-color-selected, 8%);
+		}
+
+		span.dbn:active {
+			text-decoration: underline;
+		}
+
+	}
+
+	div.errors {
+		//background-color: @background-color-error;
+		span.err_msg {
+			color: @text-color-error;
+		}
+	}
+
+}
+
+psql-variables-view {
+
+	overflow: auto;
+	table.psql-variables-table {
+		margin: 8px;
+		border: 1px solid @base-border-color;
+		border-collapse: collapse;
+	}
+
+	table.psql-variables-table td {
+		padding-left: 5px;
+		padding-right: 5px;
+		border: 1px solid @base-border-color;
+	}
+
+	.center {
+		margin: auto;
+		width: 50%;
+	}
+
+}
+
+psql-db {
+
+	overflow: auto;
+
+	div.s23 {
+		margin-left: 0.5rem;
+		font-size: 14pt;
+		clear: both;
+	}
+	div.s23::before {
+		font-family: "FontAwesome";
+		content: "\f0db";
+	}
+
+	div.s13 {
+		margin-left: 0.5rem;
+		font-size: 14pt;
+		clear: both;
+	}
+	div.s13::before {
+		font-family: "FontAwesome";
+		content: "\f0ce";
+	}
+
+	div.t1 {
+		text-align: center;
+		span.rel {
+			font-size: 10pt;
+			border: 1px solid @base-border-color;
+			border-radius: 3px;
+			background-color: @background-color-selected;
+			padding: 3px 6px 3px 6px;
+			display: inline-block;
+			float: left;
+			margin-left: 0.5rem;
+			margin-bottom: 0.3rem;
+			color: @text-color;
+		}
+
+		span.rel:hover {
+			color: lighten(@text-color, 40%);
+			background-color: lighten(@background-color-selected, 8%);
+		}
+
+		span.rel:active {
+			text-decoration: underline;
+		}
+
+	}
+
+}
+
+psql-rel {
+
+	overflow: auto;
+	padding: 9px 4px 5px 7px;
+
+	//div.describe p.pre {
+	font-family: Consolas, "DejaVu Sans Mono", "monospace";
+	white-space: pre;
+	font-size: 10pt;
+	br {
+		display: none;
+	}
+	white-space: pre;
+
+	.psql-out-html {
+		padding: 9px 4px 5px 7px;
+	}
+	.psql-out-text {
+		padding: 10px 4px 5px 7px;
+	}
+
+	table {
+		margin: 1px;
+		border: 1px solid @base-border-color;
+		border-collapse: collapse;
+	}
+	table td, table th {
+		border: 1px solid @base-border-color;
+		padding: 3px 2px;
+	}
+	table tbody td {
+	}
+	table tr:nth-child(even) {
+		background: @background-color-highlight;
+		/*color: @text-color-highlight;*/
+	}
+	table tr th {
+		background: @background-color-success;
+		color: @text-color-highlight;
+		font-weight: bold;
+		border: 2px solid @base-border-color;
+	}
+
+	.cmd_span {
+		display: block;
+		padding-left: 4px;
+		margin-bottom: 4px;
+		width:100%;
+		border-bottom: 1px solid @base-border-color;
+	}
+
+	.inputs {
+		display:flex;
+		flex-direction: row;
+		margin-bottom: 8px;
+		padding-bottom: 4px;
+		border-bottom: 1px solid @base-border-color;
+	}
+
+	div.results {
+	}
+
+	div.results table {
+	}
+
+	span.sel {
+		//border: 1px solid green;
+		padding: 0px;
+		margin: 3px 0px 0px 4px;
+		font-size: 12pt;
+	}
+
+	.editor.mini.sel {
+		width:32pt;
+	}
+	.editor.mini.cmd {
+		margin: 0px;
+		padding: 0px;
+		width:300pt;
+	}
+
+	button.sel {
+		margin-left: 12px;
+	}
+
+
+
+}
+
+div.icon-table::before {
+	font-family: "FontAwesome";
+	content: "\f0ce";
+}
+
